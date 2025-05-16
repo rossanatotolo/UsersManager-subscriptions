@@ -1,18 +1,18 @@
-package service;
+package com.example.service;
 
-import dto.SubscriptionDtoInput;
-import dto.SubscriptionDtoOutput;
-import exception.NotFoundException;
+import com.example.dto.SubscriptionDtoInput;
+import com.example.dto.SubscriptionDtoOutput;
+import com.example.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mapper.SubscriptionMapper;
-import model.Subscription;
+import com.example.mapper.SubscriptionMapper;
+import com.example.model.Subscription;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import repository.SubscriptionRepository;
+import com.example.repository.SubscriptionRepository;
 
 import java.util.List;
 

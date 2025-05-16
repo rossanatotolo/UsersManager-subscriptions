@@ -1,4 +1,4 @@
-package exception;
+package com.example.exception;
 
 import lombok.Getter;
 

@@ -1,11 +1,10 @@
-package mapper;
+package com.example.mapper;
 
-import dto.UserDtoInput;
-import dto.UserDtoOutput;
-import model.User;
+import com.example.dto.UserDtoInput;
+import com.example.dto.UserDtoOutput;
+import com.example.model.User;
 
 import java.util.HashSet;
-
 
 public class UserMapper {
     public static UserDtoOutput toUserDto(final User user) {

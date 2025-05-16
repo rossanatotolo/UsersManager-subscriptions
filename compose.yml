@@ -1,0 +1,28 @@
+services:
+  app:
+    build: .
+    image: users-manager-subscriptions
+    container_name: users-manager-subscriptions
+    ports:
+      - "8090:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/subscriptions
+      - SPRING_DATASOURCE_USERNAME=sub
+      - SPRING_DATASOURCE_PASSWORD=1234
+
+  db:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "6541:5432"
+    environment:
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_USER=sub
+      - POSTGRES_DB=subscriptions
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10

@@ -1,7 +1,8 @@
-package controller;
+package com.example.controller;
 
-import dto.SubscriptionDtoInput;
-import dto.SubscriptionDtoOutput;
+import com.example.dto.SubscriptionDtoInput;
+import com.example.dto.SubscriptionDtoOutput;
+import com.example.service.SubscriptionService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import service.SubscriptionService;
 
 import java.util.List;
 

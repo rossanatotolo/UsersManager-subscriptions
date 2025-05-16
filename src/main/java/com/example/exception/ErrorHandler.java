@@ -1,4 +1,4 @@
-package exception;
+package com.example.exception;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class ErrorHandler {
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
-    //400
+    @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class}) //400
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidation(final Exception e) {
         log.debug("Получен статус 400 Bad Request {}", e.getMessage(), e);

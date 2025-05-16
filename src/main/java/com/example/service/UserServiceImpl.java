@@ -1,21 +1,22 @@
-package service;
+package com.example.service;
 
-import dto.SubscriptionDtoOutput;
-import dto.UserDtoInput;
-import dto.UserDtoOutput;
-import exception.DuplicatedDataException;
-import exception.NotFoundException;
+import com.example.model.Subscription;
+import com.example.model.User;
+import com.example.dto.SubscriptionDtoOutput;
+import com.example.dto.UserDtoInput;
+import com.example.dto.UserDtoOutput;
+import com.example.exception.DuplicatedDataException;
+import com.example.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mapper.SubscriptionMapper;
-import mapper.UserMapper;
-import model.Subscription;
-import model.User;
+import com.example.mapper.SubscriptionMapper;
+import com.example.mapper.UserMapper;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import repository.SubscriptionRepository;
-import repository.UserRepository;
+import com.example.repository.SubscriptionRepository;
+import com.example.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +97,7 @@ public class UserServiceImpl implements UserService {
         final User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователя с id = {} не существует." + userId));
 
-        final List<Subscription> subscriptions = subscriptionRepository.findByUser(user, pageRequest);
+        final List<Subscription> subscriptions = subscriptionRepository.findByUsers(user, pageRequest);
 
         if (subscriptions.isEmpty()) {
             log.info("Спискок подписок у пользователя с id = {} не найден.", userId);

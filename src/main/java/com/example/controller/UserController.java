@@ -1,12 +1,13 @@
-package controller;
+package com.example.controller;
 
-import dto.SubscriptionDtoOutput;
-import dto.UserDtoOutput;
+import com.example.dto.SubscriptionDtoOutput;
+import com.example.dto.UserDtoOutput;
+import com.example.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
-import dto.UserDtoInput;
+import com.example.dto.UserDtoInput;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import service.UserService;
 
 import java.util.List;
 
@@ -38,7 +38,8 @@ public class UserController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDtoOutput userUpdate(@PathVariable("id") @Positive final Long userId, @Valid @RequestBody final UserDtoInput userDtoInput) {
+    public UserDtoOutput userUpdate(@PathVariable("id") @Positive final Long userId,
+                                    @Valid @RequestBody final UserDtoInput userDtoInput) {
         return userService.userUpdate(userId, userDtoInput);
     }
 
@@ -54,22 +55,25 @@ public class UserController {
         userService.userDelete(userId);
     }
 
-    @PostMapping("/{id}/subscriptions")
+    @PostMapping("/{id}/subscriptions/{sub_id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public SubscriptionDtoOutput addSubscription(@PathVariable("id") @Positive final Long userId, @Positive final Long subId) {
+    public SubscriptionDtoOutput addSubscription(@PathVariable("id") @Positive final Long userId,
+                                                 @PathVariable("sub_id") @Positive final Long subId) {
         return userService.addSubscription(userId, subId);
     }
 
     @GetMapping("/{id}/subscriptions")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubscriptionDtoOutput> getAllSubscriptions(@PathVariable("id") @Positive final Long userId, @RequestParam(defaultValue = "0") @PositiveOrZero final int from,
-                                                   @RequestParam(defaultValue = "10") @Positive final int size) {
+    public List<SubscriptionDtoOutput> getAllSubscriptions(@PathVariable("id") @Positive final Long userId,
+                                                           @RequestParam(defaultValue = "0") @PositiveOrZero final int from,
+                                                           @RequestParam(defaultValue = "10") @Positive final int size) {
         return userService.getAllSubscriptions(userId, from, size);
     }
 
     @DeleteMapping("/{id}/subscriptions/{sub_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteSubscription(@PathVariable("id") @Positive final Long userId, @PathVariable("sub_id") @Positive final Long subId) {
+    public void deleteSubscription(@PathVariable("id") @Positive final Long userId,
+                                   @PathVariable("sub_id") @Positive final Long subId) {
         userService.deleteSubscription(userId, subId);
     }
 }

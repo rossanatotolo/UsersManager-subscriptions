@@ -1,8 +1,8 @@
-package service;
+package com.example.service;
 
-import dto.SubscriptionDtoOutput;
-import dto.UserDtoInput;
-import dto.UserDtoOutput;
+import com.example.dto.SubscriptionDtoOutput;
+import com.example.dto.UserDtoInput;
+import com.example.dto.UserDtoOutput;
 
 import java.util.List;
 

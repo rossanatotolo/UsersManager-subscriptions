@@ -1,8 +1,8 @@
-package mapper;
+package com.example.mapper;
 
-import dto.SubscriptionDtoInput;
-import dto.SubscriptionDtoOutput;
-import model.Subscription;
+import com.example.dto.SubscriptionDtoInput;
+import com.example.dto.SubscriptionDtoOutput;
+import com.example.model.Subscription;
 
 import java.util.HashSet;
 
