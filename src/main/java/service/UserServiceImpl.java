@@ -1,9 +1,9 @@
 package service;
 
-import dto.SubscriptionDtoInput;
 import dto.SubscriptionDtoOutput;
 import dto.UserDtoInput;
 import dto.UserDtoOutput;
+import exception.DuplicatedDataException;
 import exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +11,13 @@ import mapper.SubscriptionMapper;
 import mapper.UserMapper;
 import model.Subscription;
 import model.User;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import repository.SubscriptionRepository;
 import repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,20 +69,59 @@ public class UserServiceImpl implements UserService {
         log.info("Пользователь с id  = {} удален.", userId);
     }
 
-    public SubscriptionDtoOutput addSubscription(final Long userId, final SubscriptionDtoInput subscriptionDtoInput) {
+    @Override
+    public SubscriptionDtoOutput addSubscription(final Long userId, final Long subId) {
         final User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователя с id = {} не существует." + userId));
 
-        final Subscription subscription = subscriptionRepository.save(SubscriptionMapper.toSubscription(subscriptionDtoInput));
-        log.info("Комментарий к событию с id = {} добавлен.", eventId);
-        return CommentMapper.toCommentOutputDto(comment);
+        final Subscription subscription = subscriptionRepository.findById(subId)
+                .orElseThrow(() -> new NotFoundException("Подписки с id = {} не существует." + subId));
+
+        if (user.getSubscriptions().contains(subscription)) {
+            throw new DuplicatedDataException("Повторное добавление подписки невозможно.");
+        }
+
+        subscription.getUsers().add(user);
+        user.getSubscriptions().add(subscription);
+
+        log.info("Пользователь с id = {} добавил подписку с id = {}.", userId, subId);
+        return SubscriptionMapper.toSubscriptionDto(subscription);
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public List<SubscriptionDtoOutput> getAllSubscriptions(final Long userId, final int from, final int size) {
+        PageRequest pageRequest = PageRequest.of(from / size, size);
 
+        final User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователя с id = {} не существует." + userId));
+
+        final List<Subscription> subscriptions = subscriptionRepository.findByUser(user, pageRequest);
+
+        if (subscriptions.isEmpty()) {
+            log.info("Спискок подписок у пользователя с id = {} не найден.", userId);
+            return new ArrayList<>();
+        }
+
+        log.info("Получение списка подписок пользователя с id = {}.", userId);
+        return subscriptions.stream()
+                .map(SubscriptionMapper::toSubscriptionDto)
+                .toList();
     }
 
+    @Override
     public void deleteSubscription(final Long userId, final Long subId) {
+        final User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователя с id = {} не существует." + userId));
 
+        final Subscription subscription = subscriptionRepository.findById(subId)
+                .orElseThrow(() -> new NotFoundException("Подписки с id = {} не существует." + subId));
+
+        subscription.getUsers().remove(user);
+        user.getSubscriptions().remove(subscription);
+
+        subscriptionRepository.save(subscription);
+        userRepository.save(user);
+        log.info("Пользователь с id = {} удалил подписку с id = {}.", userId, subId);
     }
 }

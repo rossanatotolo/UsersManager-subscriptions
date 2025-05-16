@@ -1,6 +1,5 @@
 package controller;
 
-import dto.SubscriptionDtoInput;
 import dto.SubscriptionDtoOutput;
 import dto.UserDtoOutput;
 import jakarta.validation.Valid;
@@ -57,8 +56,8 @@ public class UserController {
 
     @PostMapping("/{id}/subscriptions")
     @ResponseStatus(HttpStatus.CREATED)
-    public SubscriptionDtoOutput addSubscription(@PathVariable("id") @Positive final Long userId, @Valid @RequestBody final SubscriptionDtoInput subscriptionDtoInput) {
-        return userService.addSubscription(userId, subscriptionDtoInput);
+    public SubscriptionDtoOutput addSubscription(@PathVariable("id") @Positive final Long userId, @Positive final Long subId) {
+        return userService.addSubscription(userId, subId);
     }
 
     @GetMapping("/{id}/subscriptions")
